@@ -4,6 +4,7 @@
 #include <termio.h>
 
 char getch() {
+    // https://blog.csdn.net/gaopu12345/article/details/30467099
     struct termios tm;
     int fd = 0, ch;
     if(tcgetattr(fd, &tm) < 0) {
