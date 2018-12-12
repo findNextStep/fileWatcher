@@ -17,6 +17,7 @@ bool fileWatcher::startWatch() {
 }
 
 bool fileWatcher::stopWatch() {
+    inotify_rm_watch(this->inotify_fd,this->wd);
     return true;
 }
 
