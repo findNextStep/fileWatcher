@@ -44,7 +44,7 @@ public:
     void run();
 
 private:
-    const int inofity_fd;
+    const int inotify_fd;
     const std::string file_name;
     int wd;
     std::function<void(void)>call_back_func;
