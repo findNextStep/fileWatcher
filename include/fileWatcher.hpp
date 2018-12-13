@@ -33,10 +33,12 @@ public:
     bool stopWatch();
 
     /**
-     * @brief watchOnce 进行一次监视
-     * 这个函数会阻塞线程直至被监视文件被修改
+     * @brief watchOnce 进行一次文件监视
+     * 如果监视过程中发生异常，例如监视被另一个线程终止
+     * 会返回false
+     * @return 文件是否发生修改
      */
-    void watchOnce();
+    bool watchOnce();
     /**
      * @brief run 执行监视循环
      * 执行后阻塞线程，如果发生被监视文件修改，调用回调函数

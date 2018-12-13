@@ -22,8 +22,12 @@ char getch() {
     return ch;
 }
 
-int main() {
-    wmj::fileWatcher::fileWatcher fw("./test.txt", []() {
+int main(int argc,char **argv) {
+    if (argc < 2){
+        std::cerr << "please give me the file name" << std::endl;
+        return 1;
+    }
+    wmj::fileWatcher::fileWatcher fw(argv[1], []() {
         std::cout << "file change" << std::endl;
     });
     fw.startWatch();
@@ -42,4 +46,6 @@ int main() {
             fw.stopWatch();
         }
     }
+    fw.stopWatch();
+    watch_t.join();
 }

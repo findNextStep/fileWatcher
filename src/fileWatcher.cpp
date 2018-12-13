@@ -17,34 +17,37 @@ bool fileWatcher::startWatch() {
 }
 
 bool fileWatcher::stopWatch() {
-    inotify_rm_watch(this->inotify_fd,this->wd);
+    inotify_rm_watch(this->inotify_fd, this->wd);
     return true;
 }
 
-void fileWatcher::watchOnce() {
-    char* a = new char[(10 * (sizeof(struct inotify_event) + file_name.size() + 1))];
+bool fileWatcher::watchOnce() {
+    char *a = new char[(10 * (sizeof(struct inotify_event) + file_name.size() + 1))];
     auto readnum = read(inotify_fd, a, 100);
     if(readnum > 0) {
         std::string str(a, readnum);
         for(auto c = a; c < a + readnum;) {
             auto event = (struct inotify_event *) c;
             {
-                if(event->mask & IN_CLOSE_WRITE) {
-                    return;
+                if((event->mask & IN_IGNORED) == 0) {
+                    if(event->mask & IN_CLOSE_WRITE) {
+                        delete a;
+                        return true;
+                    }
                 }
             }
             c += sizeof(struct inotify_event) + event->len;
         }
-    } else {
-        return;
-    }
+    } 
     delete a;
+    return false;
 }
 
-void fileWatcher::run(){
-    while (true){
-        watchOnce();
-        this->call_back_func();
+void fileWatcher::run() {
+    while(true) {
+        if  (watchOnce()){
+            this->call_back_func();
+        }
     }
 
 }
