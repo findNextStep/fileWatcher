@@ -13,6 +13,7 @@ fileWatcher::fileWatcher(const std::string &fileName,
 
 fileWatcher::~fileWatcher(){
     need_watching = false;
+    startWatch();
     stopWatch();
 }
 
