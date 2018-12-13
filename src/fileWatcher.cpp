@@ -7,8 +7,13 @@ namespace fileWatcher {
 
 fileWatcher::fileWatcher(const std::string &fileName,
                          const std::function<void(void)> &call_back):
-    inotify_fd(inotify_init()), file_name(fileName) {
+    inotify_fd(inotify_init()), file_name(fileName),need_watching(true) {
     this->call_back_func = call_back;
+}
+
+fileWatcher::~fileWatcher(){
+    need_watching = false;
+    stopWatch();
 }
 
 bool fileWatcher::startWatch() {
@@ -44,7 +49,7 @@ bool fileWatcher::watchOnce() {
 }
 
 void fileWatcher::run() {
-    while(true) {
+    while(need_watching) {
         if  (watchOnce()){
             this->call_back_func();
         }

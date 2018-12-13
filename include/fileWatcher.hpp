@@ -17,6 +17,7 @@ public:
      * @param call_back 发现文件更改后的回调函数
      */
     fileWatcher(const std::string &fileName, const std::function<void(void)> &call_back);
+    ~fileWatcher();
 
     /**
      * @brief startWatch 开始监视
@@ -48,6 +49,7 @@ public:
 private:
     const int inotify_fd;
     const std::string file_name;
+    bool need_watching;
     int wd;
     std::function<void(void)>call_back_func;
 };
