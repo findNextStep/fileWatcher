@@ -24,12 +24,12 @@ char getch() {
 }
 
 int main(int argc,char **argv) {
-    if (argc < 2){
-        std::cerr << "please give me the file name" << std::endl;
-        return 1;
+    std::string file_name = "./build/test.txt";
+    if (argc>=2){
+        file_name = argv[1];
     }
     // 创建文件监视对象，设置回调函数
-    auto fw = std::make_shared<wmj::fileWatcher::fileWatcher>(argv[1], []() {
+    auto fw = std::make_shared<wmj::fileWatcher::fileWatcher>(file_name, []() {
         std::cout << "file change" << std::endl;
     });
     // 开始文件监视
@@ -39,9 +39,9 @@ int main(int argc,char **argv) {
         fw->run();
     });
     char a;
-    while(a = getch()) {
+    while((a = getch()) > 0) {
         // 按q结束程序
-        if(a == 'q' || a > 127) {
+        if(a == 'q') {
             break;
         }
         // 按o开始文件监视
