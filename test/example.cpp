@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <termio.h>
+#include <memory>
 
 char getch() {
     // https://blog.csdn.net/gaopu12345/article/details/30467099
@@ -27,25 +28,34 @@ int main(int argc,char **argv) {
         std::cerr << "please give me the file name" << std::endl;
         return 1;
     }
-    wmj::fileWatcher::fileWatcher fw(argv[1], []() {
+    // 创建文件监视对象，设置回调函数
+    auto fw = std::make_shared<wmj::fileWatcher::fileWatcher>(argv[1], []() {
         std::cout << "file change" << std::endl;
     });
-    fw.startWatch();
+    // 开始文件监视
+    fw->startWatch();
+    // 建立文件监视进程
     std::thread watch_t([&fw]() {
-        fw.run();
+        fw->run();
     });
     char a;
     while(a = getch()) {
+        // 按q结束程序
         if(a == 'q' || a > 127) {
             break;
         }
+        // 按o开始文件监视
         if(a == 'o') {
-            fw.startWatch();
+            fw->startWatch();
         }
+        // 按p结束文件监视
         if(a == 'p') {
-            fw.stopWatch();
+            fw->stopWatch();
         }
     }
-    fw.stopWatch();
+    // 释放资源停止run函数
+    fw.reset();
+    // 等待文件监视进程结束
     watch_t.join();
+    return 0;
 }
