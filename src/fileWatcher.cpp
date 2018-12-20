@@ -18,7 +18,8 @@ fileWatcher::~fileWatcher() {
 }
 
 bool fileWatcher::startWatch() {
-    wd = inotify_add_watch(inotify_fd, file_name.c_str(), IN_CLOSE_WRITE | IN_ATTRIB);
+    wd = inotify_add_watch(inotify_fd, file_name.c_str(),
+            IN_CLOSE_WRITE | IN_MOVE_SELF | IN_ATTRIB);
     return true;
 }
 
@@ -31,25 +32,28 @@ bool fileWatcher::watchOnce() {
     char *a = new char[(10 * (sizeof(struct inotify_event) + file_name.size() + 1))];
     auto readnum = read(inotify_fd, a, 100);
     if(readnum > 0) {
+        unsigned int mask  = 0;
         for(auto c = a; c < a + readnum;) {
             auto event = (struct inotify_event *) c;
-            {
-                if((event->mask & IN_IGNORED) == 0) {
-                    if(event->mask & IN_CLOSE_WRITE) {
-                        delete a;
-                        return true;
-                    } else if(event->mask & IN_ATTRIB) {
-                        // 一些编辑器(比如vim)使用文件覆盖的方法
-                        // 写入文件，此时需要重新启动一次读
-                        stopWatch();
-                        startWatch();
-                        delete a;
-                        return true;
-                    }
-                }
-            }
+            mask |= event->mask;
             c += sizeof(struct inotify_event) + event->len;
         }
+        if((mask & IN_IGNORED) == 0) {
+            if(mask & IN_CLOSE_WRITE ||
+                    mask & IN_MOVE_SELF) {
+                // 在文件被写入关闭或者文件被覆盖的时候说明文件被修改
+                delete a;
+                return true;
+            }
+        }else if(mask & IN_ATTRIB) {
+            // 一些编辑器(比如vim)使用文件覆盖的方法
+            // 写入文件，此时需要重新启动一次读
+            stopWatch();
+            startWatch();
+            delete a;
+            return false;
+        }
+
     }
     delete a;
     return false;
