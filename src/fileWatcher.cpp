@@ -19,7 +19,7 @@ fileWatcher::~fileWatcher() {
 
 bool fileWatcher::startWatch() {
     wd = inotify_add_watch(inotify_fd, file_name.c_str(),
-                           IN_CLOSE_WRITE | IN_MOVE_SELF | IN_ATTRIB | IN_DELETE_SELF);
+                           IN_CLOSE_WRITE | IN_ATTRIB | IN_DELETE_SELF);
     return true;
 }
 
@@ -35,16 +35,16 @@ bool fileWatcher::watchOnce() {
         unsigned int mask  = 0;
         for(auto c = a; c < a + readnum;) {
             auto event = (struct inotify_event *) c;
-            mask |= event->mask;
+            if(event->wd == this->wd) {
+                mask |= event->mask;
+            }
             c += sizeof(struct inotify_event) + event->len;
         }
-        if((mask & IN_IGNORED) == 0) {
-            if(mask & IN_CLOSE_WRITE ||
-                    mask & IN_MOVE_SELF) {
-                // 在文件被写入关闭或者文件被覆盖的时候说明文件被修改
-                delete a;
-                return true;
-            }
+        if((mask & IN_IGNORED) == 0 &&
+                (mask & IN_CLOSE_WRITE)) {
+            // 在文件被写入关闭或者文件被覆盖的时候说明文件被修改
+            delete a;
+            return true;
         } else if(mask & IN_DELETE_SELF) {
             // 如果你使用mv命令覆盖文件，文件
             // 只是发生了一次没有读入的写,此

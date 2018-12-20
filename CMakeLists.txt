@@ -6,6 +6,7 @@ include_directories(./include)
 
 add_compile_options(-Wall)
 add_compile_options(-std=c++11)
+add_compile_options(-g)
 
 add_library(file_watcher ./src/fileWatcher.cpp)
 
