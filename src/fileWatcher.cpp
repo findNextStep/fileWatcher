@@ -19,7 +19,7 @@ fileWatcher::~fileWatcher() {
 
 bool fileWatcher::startWatch() {
     wd = inotify_add_watch(inotify_fd, file_name.c_str(),
-            IN_CLOSE_WRITE | IN_MOVE_SELF | IN_ATTRIB);
+                           IN_CLOSE_WRITE | IN_MOVE_SELF | IN_ATTRIB | IN_DELETE_SELF);
     return true;
 }
 
@@ -45,7 +45,15 @@ bool fileWatcher::watchOnce() {
                 delete a;
                 return true;
             }
-        }else if(mask & IN_ATTRIB) {
+        } else if(mask & IN_DELETE_SELF) {
+            // 如果你使用mv命令覆盖文件，文件
+            // 只是发生了一次没有读入的写,此
+            // 时只会触发此处
+            stopWatch();
+            startWatch();
+            delete a;
+            return true;
+        } else if(mask & IN_ATTRIB) {
             // 一些编辑器(比如vim)使用文件覆盖的方法
             // 写入文件，此时需要重新启动一次读
             stopWatch();
