@@ -16,3 +16,18 @@
   6. emacs支持
 
   其他编辑器理论上也可以支持，建议使用测试程序先进行测试
+
+# 使用说明
+
+假设你使用一个git+cmake工程，添加filewatcher的步骤如下
+
+1. 在你想放置filewatcher的文件夹下执行
+
+   `git submodule add https://coding.net/u/findnextstepgma/p/fileWatcher`
+
+2. 在你的`CMakeLists.txt`中添加include路径和相关链接库链接
+
+   ```cmake
+   include_directories(${FILE_WATCHER_INCLUDE})
+   link_libraries(file_watcher)
+   ```
