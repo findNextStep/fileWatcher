@@ -45,7 +45,7 @@ bool fileWatcher::watchOnce() {
             // 在文件被写入关闭或者文件被覆盖的时候说明文件被修改
             delete a;
             return true;
-        } else if(mask & IN_DELETE_SELF  || mask & IN_MOVE_SELF) {
+       } else if(mask & IN_DELETE_SELF  || mask & IN_MOVE_SELF) {
             // 如果你使用mv命令覆盖文件，文件
             // 只是发生了一次没有读入的写,此
             // 时只会触发此处
