@@ -10,6 +10,8 @@ add_compile_options(-g)
 
 add_library(file_watcher ./src/fileWatcher.cpp)
 
+add_library(exe_watcher ./src/exeWatcher.cpp)
+
 add_executable(example_fileWatcher ./test/example_fileWatcher.cpp)
 
 target_link_libraries(example_fileWatcher file_watcher pthread)
