@@ -38,8 +38,12 @@ bool exeWatcher::watchOnce() {
             }
             c += sizeof(struct inotify_event) + event->len;
         }
+        if (mask & IN_CLOSE){
+            delete[] a;
+            return true;
+        }
     }
-    delete a;
+    delete[] a;
     return false;
 }
 void exeWatcher::run() {
