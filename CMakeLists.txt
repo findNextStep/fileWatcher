@@ -4,6 +4,9 @@ project(fileWatcher)
 
 include_directories(./include)
 
+##### load bandit #######
+include_directories(./3rdparty/)
+
 add_compile_options(-Wall)
 add_compile_options(-std=c++11)
 add_compile_options(-g)
