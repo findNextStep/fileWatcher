@@ -8,7 +8,7 @@ include_directories(include)
 include_directories(3rdparty/)
 
 add_compile_options(-Wall)
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 add_compile_options(-g)
 
 add_library(file_watcher ./src/fileWatcher.cpp)
@@ -25,3 +25,15 @@ target_link_libraries(example_fileWatcher file_watcher pthread)
 
 get_property(include_dir DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 set(FILE_WATCHER_INCLUDE ${include_dir} PARENT_SCOPE)
+
+
+##### Ctest #######
+
+include(CTest)
+
+if(BUILD_TESTING)
+    #### filewatcher的测试程序 ####
+    add_executable(test_fileWatcher "./test/test_case/test_fileWatcher.cpp")
+    # target_compile_options(test_fileWatcher INTERFACE -std=c++14)
+    target_link_libraries(test_fileWatcher file_watcher pthread)
+endif()
