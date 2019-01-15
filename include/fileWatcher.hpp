@@ -17,7 +17,7 @@ public:
      * @param call_back 发现文件更改后的回调函数
      */
     fileWatcher(const std::string &fileName, const std::function<void(void)> &call_back);
-    ~fileWatcher();
+    virtual ~fileWatcher();
 
     /**
      * @brief startWatch 开始监视
