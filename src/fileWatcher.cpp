@@ -43,7 +43,7 @@ bool fileWatcher::watchOnce() {
         if((mask & IN_IGNORED) == 0 &&
             (mask & IN_CLOSE_WRITE)) {
             // 在文件被写入关闭或者文件被覆盖的时候说明文件被修改
-            delete a;
+            delete[] a;
             return true;
        } else if(mask & IN_DELETE_SELF  || mask & IN_MOVE_SELF) {
             // 如果你使用mv命令覆盖文件，文件
@@ -51,14 +51,14 @@ bool fileWatcher::watchOnce() {
             // 时只会触发此处
             stopWatch();
             startWatch();
-            delete a;
+            delete[] a;
             return true;
         } else if(mask & IN_ATTRIB) {
             // 一些编辑器(比如vim)使用文件覆盖的方法
             // 写入文件，此时需要重新启动一次读
             stopWatch();
             startWatch();
-            delete a;
+            delete[] a;
             return false;
         }
 
