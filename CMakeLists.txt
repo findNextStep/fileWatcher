@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.4)
 
 project(fileWatcher)
 
-include_directories(./include)
+include_directories(include)
 
 ##### load bandit #######
-include_directories(./3rdparty/)
+include_directories(3rdparty/bandit/)
 
 add_compile_options(-Wall)
 add_compile_options(-std=c++11)
