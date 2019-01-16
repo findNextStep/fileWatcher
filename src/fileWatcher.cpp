@@ -73,7 +73,6 @@ void fileWatcher::run() {
             this->call_back_func();
         }
     }
-
 }
 
 }
