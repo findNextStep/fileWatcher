@@ -7,8 +7,8 @@ include_directories(include)
 ##### load bandit #######
 include_directories(3rdparty/)
 
+set(CMAKE_CXX_STANDARD 14)
 add_compile_options(-Wall)
-add_compile_options(-std=c++14)
 add_compile_options(-g)
 
 add_library(file_watcher ./src/fileWatcher.cpp)
