@@ -47,6 +47,9 @@ go_bandit([]() {
             of << "some txt" << std::endl;
             system(("mv " + swp_file_name + " " + file_name).c_str());
         });
+        bandit::it("vim写入j",[&](){
+            system(("vim +wq " + file_name).c_str());
+        });
         exe_ptr.reset();
         if(run_thread.joinable()) {
             run_thread.join();
