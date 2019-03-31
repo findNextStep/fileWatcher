@@ -13,14 +13,8 @@ go_bandit([]() {
         of << "some txt" << std::endl;
         of.close();
     }
-    bandit::describe("写入测试", [file_name]() {
-        wmj::fileWatcherSync fws({file_name});
-        bandit::after_each([&]() {
-            // 等待监视线程
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            std::vector<std::string> file_list = fws.hasChange();
-            AssertThat(file_list.size(), snowhouse::Is().EqualTo(1));
-        });
+    wmj::fileWatcherSync fws({file_name});
+    auto run_case = [&]() {
         bandit::it("尾部写入", [&]() {
             // 使用文件流直接向文件尾写入
             std::ofstream of(file_name, std::ios::app);
@@ -40,7 +34,6 @@ go_bandit([]() {
             system(("vim +wq " + file_name).c_str());
         });
         bandit::describe("多次写入", [&]() {
-
             bandit::it("vim写入+常规写入", [&]() {
                 system(("vim +wq " + file_name).c_str());
 
@@ -53,6 +46,26 @@ go_bandit([]() {
             std::ofstream of(file_name);
             of << "some txt" << std::endl;
         });
+    };
+    bandit::describe("写入测试 - checkFile 函数测试", [&]() {
+        bandit::after_each([&]() {
+            // 等待监视线程
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            AssertThat(fws.checkFile(file_name), snowhouse::Is().EqualTo(true));
+            // 调用之后应当清除列表
+            AssertThat(fws.checkFile(file_name), snowhouse::Is().EqualTo(false));
+        });
+        run_case();
+    });
+    bandit::describe("写入测试 - hasChange 函数测试", [&]() {
+        bandit::after_each([&]() {
+            // 等待监视线程
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            AssertThat(fws.hasChange().size(), snowhouse::Is().EqualTo(1));
+            // 调用之后应当清除列表
+            AssertThat(fws.hasChange().size(), snowhouse::Is().EqualTo(0));
+        });
+        run_case();
     });
 });
 
