@@ -89,6 +89,15 @@ public:
             watch_thread.join();
         }
     }
+    bool checkFile(const std::string &file_name) {
+        std::lock_guard<std::mutex>(this->change_file_list_mutex);
+        auto file = std::find(this->change_file_list.begin(), this->change_file_list.end(), file_name);
+        if(file != change_file_list.end()) {
+            this->change_file_list.erase(file);
+            return true;
+        }
+        return false;
+    }
     std::vector<std::string> hasChange() {
         std::lock_guard<std::mutex>(this->change_file_list_mutex);
         auto result = this->change_file_list;
