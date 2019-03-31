@@ -19,7 +19,7 @@ go_bandit([]() {
             // 等待监视线程
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             std::vector<std::string> file_list = fws.hasChange();
-            AssertThat(file_list.size(),snowhouse::Is().EqualTo(1));
+            AssertThat(file_list.size(), snowhouse::Is().EqualTo(1));
         });
         bandit::it("尾部写入", [&]() {
             // 使用文件流直接向文件尾写入
@@ -38,6 +38,20 @@ go_bandit([]() {
         });
         bandit::it("vim写入", [&]() {
             system(("vim +wq " + file_name).c_str());
+        });
+        bandit::describe("多次写入", [&]() {
+
+            bandit::it("vim写入+常规写入", [&]() {
+                system(("vim +wq " + file_name).c_str());
+
+                std::ofstream of(file_name);
+                of << "some txt" << std::endl;
+            });
+        });
+        bandit::it("常规写入", [&]() {
+            // 确定可以继续跟踪
+            std::ofstream of(file_name);
+            of << "some txt" << std::endl;
         });
     });
 });
