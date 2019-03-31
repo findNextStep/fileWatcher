@@ -10,6 +10,7 @@ include_directories(3rdparty/)
 set(CMAKE_CXX_STANDARD 14)
 add_compile_options(-Wall)
 add_compile_options(-g)
+add_compile_options(-std=c++14)
 
 add_library(file_watcher ./src/fileWatcher.cpp)
 
@@ -34,6 +35,8 @@ include(CTest)
 if(BUILD_TESTING)
     #### filewatcher的测试程序 ####
     add_executable(test_fileWatcher "./test/test_case/test_fileWatcher.cpp")
-    # target_compile_options(test_fileWatcher INTERFACE -std=c++14)
     target_link_libraries(test_fileWatcher file_watcher pthread)
+
+    add_executable(test_fileWatcherSync "./test/test_case/test_fileWatcherSync.cpp")
+    target_link_libraries(test_fileWatcher pthread)
 endif()
