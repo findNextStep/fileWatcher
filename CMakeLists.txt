@@ -38,5 +38,5 @@ if(BUILD_TESTING)
     target_link_libraries(test_fileWatcher file_watcher pthread)
 
     add_executable(test_fileWatcherSync "./test/test_case/test_fileWatcherSync.cpp")
-    target_link_libraries(test_fileWatcher pthread)
+    target_link_libraries(test_fileWatcherSync pthread)
 endif()
