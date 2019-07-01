@@ -5,7 +5,7 @@ project(fileWatcher)
 include_directories(include)
 
 ##### load bandit #######
-include_directories(3rdparty/)
+include_directories(3rdparty/bandit)
 
 set(CMAKE_CXX_STANDARD 14)
 add_compile_options(-Wall)
