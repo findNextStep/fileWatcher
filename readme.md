@@ -23,7 +23,7 @@
 
 1. 在你想放置filewatcher的文件夹下执行
 
-   `git submodule add https://coding.net/u/findnextstepgma/p/fileWatcher`
+   `git submodule add https://github.com/findNextStep/fileWatcher`
 
 2. 在你的`CMakeLists.txt`中添加include路径和相关链接库链接
 
