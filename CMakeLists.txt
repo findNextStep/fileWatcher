@@ -11,9 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(file_watcher ./src/fileWatcher.cpp)
 add_library(exe_watcher ./src/exeWatcher.cpp)
 
-target_link_libraries(example_exeWatcher exe_watcher)
-target_link_libraries(example_fileWatcher file_watcher pthread)
-
 get_directory_property(hasParent PARENT_DIRECTORY)
 if(hasParent)
     # 作为一个子目录，不产生测试用例以及相关测试用例的子模块加载
@@ -49,6 +46,8 @@ else()
             # 构建测试程序
             add_executable(example_fileWatcher ./test/example_fileWatcher.cpp)
             add_executable(example_exeWatcher ./test/example_exeWatcher.cpp)
+            target_link_libraries(example_exeWatcher exe_watcher)
+            target_link_libraries(example_fileWatcher file_watcher pthread)
 
         endif()
     else()
